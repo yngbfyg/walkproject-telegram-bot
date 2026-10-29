@@ -1,0 +1,6 @@
+# Direct dependencies for the Telegram bot and tests (Python 3.10+)
+pyTelegramBotAPI==4.27.0
+python-dotenv==1.1.0
+pydantic==2.11.4
+requests==2.32.3
+pytest==8.3.5
