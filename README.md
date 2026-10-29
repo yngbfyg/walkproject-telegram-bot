@@ -90,4 +90,4 @@ The route algorithms and code are preserved as coursework rather than presented 
 - The precomputed reference matrix intentionally trades personalized start-point accuracy for fewer API requests.
 - Some edge cases (network failures, user input validation) remain typical of a student prototype.
 
-**Original source:** [GitLab WalkProject](https://gitlab.com/Fu22210/walkproject) (`dev` branch). The GitLab project is retained as the historical source; this copy is prepared for a separate, clean GitHub repository.
+**Original source:** [GitLab WalkProject](https://gitlab.com/Fu22210/walkproject) (`dev` branch). The GitLab project is retained as the historical source; this GitHub repository is a cleaned-up portfolio copy of the original team project.

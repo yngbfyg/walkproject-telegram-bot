@@ -180,21 +180,22 @@ def send_route(bot: TeleBot, message: Message) -> None:
         )
 
         def process_choice(msg):
-            text = msg.text
-            if text == "1️⃣":
-                id = 0
-            elif text == "2️⃣":
-                id = 1
-            else:
-                id = 2
+            choices = {"1️⃣": 0, "2️⃣": 1, "3️⃣": 2}
+            selected = choices.get(msg.text)
+            if selected is None:
+                reply = bot.send_message(
+                    message.chat.id, "выбери маршрут кнопкой 1️⃣, 2️⃣ или 3️⃣ 🙏🏻"
+                )
+                bot.register_next_step_handler(reply, process_choice)
+                return
             user_history.setdefault(message.chat.id, [])
-            if sorted_names[id] not in user_history[message.chat.id]:
-                user_history[message.chat.id].append(sorted_names[id])
-            route_str = ", ".join(str(place) for place in sorted_names[id])
+            if sorted_names[selected] not in user_history[message.chat.id]:
+                user_history[message.chat.id].append(sorted_names[selected])
+            route_str = ", ".join(str(place) for place in sorted_names[selected])
             msg_text = (
                 "прекрасный выбор! вот твой маршрут:\n"
                 f"<i>{route_str}</i>\n\n"
-            ) + messages[id]
+            ) + messages[selected]
             bot.send_message(
                 message.chat.id,
                 msg_text,
@@ -214,21 +215,24 @@ def send_route(bot: TeleBot, message: Message) -> None:
         )
 
         def process_choice(msg):
-            text = msg.text
-            if text == "1️⃣":
-                id = 0
-            elif text == "2️⃣":
-                id = 1
+            choices = {"1️⃣": 0, "2️⃣": 1}
+            selected = choices.get(msg.text)
+            if selected is None:
+                reply = bot.send_message(
+                    message.chat.id, "выбери маршрут кнопкой 1️⃣ или 2️⃣ 🙏🏻"
+                )
+                bot.register_next_step_handler(reply, process_choice)
+                return
 
             user_history.setdefault(message.chat.id, [])
-            if sorted_names[id] not in user_history[message.chat.id]:
-                user_history[message.chat.id].append(sorted_names[id])
-            route_str = ", ".join(str(place) for place in sorted_names[id])
+            if sorted_names[selected] not in user_history[message.chat.id]:
+                user_history[message.chat.id].append(sorted_names[selected])
+            route_str = ", ".join(str(place) for place in sorted_names[selected])
             intro = (
                 "прекрасный выбор! вот твой маршрут:\n"
                 f"<i>{route_str}</i>\n\n"
             )
-            msg_text = intro + messages[id]
+            msg_text = intro + messages[selected]
             bot.send_message(
                 message.chat.id,
                 msg_text,

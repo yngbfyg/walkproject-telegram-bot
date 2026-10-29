@@ -38,8 +38,17 @@ def register_budget_handlers(bot: TeleBot) -> None:
 
         :param message: Сообщение с текстом введённого бюджета.
         """
-        text = message.text.strip()
-        budget = int(text)
+        try:
+            budget = int((message.text or "").strip())
+            if budget < 0:
+                raise ValueError("Negative budget")
+        except ValueError:
+            reply = bot.send_message(
+                message.chat.id,
+                "введи бюджет целым неотрицательным числом (в рублях!) 🙏🏻",
+            )
+            bot.register_next_step_handler(reply, process_budget)
+            return
         user_data.setdefault(message.chat.id, {})
         user_data[message.chat.id]["budget"] = budget
         if len(user_data[message.chat.id]) != 3:
@@ -86,8 +95,17 @@ def register_walking_time_handlers(bot: TeleBot) -> None:
 
         :param message: Сообщение с текстом введённого времени.
         """
-        text = message.text.strip()
-        time = int(text)
+        try:
+            time = int((message.text or "").strip())
+            if time <= 0:
+                raise ValueError("Non-positive walking time")
+        except ValueError:
+            reply = bot.send_message(
+                message.chat.id,
+                "введи время прогулки целым положительным числом минут 🙏🏻",
+            )
+            bot.register_next_step_handler(reply, process_time)
+            return
         user_data.setdefault(message.chat.id, {})
         user_data[message.chat.id]["time"] = time
         if len(user_data[message.chat.id]) != 3:

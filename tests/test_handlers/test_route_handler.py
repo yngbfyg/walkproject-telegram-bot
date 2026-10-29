@@ -83,3 +83,37 @@ def test_one_valid_route_is_handled_gracefully(route_handler):
     bot.send_message.assert_called_once()
     bot.register_next_step_handler.assert_not_called()
     route.user_data.pop(message.chat.id, None)
+
+
+@pytest.mark.parametrize("route_count", [2, 3])
+def test_invalid_route_choice_reprompts(route_handler, route_count):
+    route = route_handler
+    message = prepare_session(route, 17800 + route_count)
+    bot = Mock()
+    points = [SimpleNamespace(name=f"Place {i}") for i in range(route_count)]
+    choices = [
+        ([point], (60, [(10, 0), (10, 0)], [40]),
+         (0, [0, 0], [0]))
+        for point in points
+    ]
+    routes = [choices[i % route_count] for i in range(15)]
+    route.user_history.pop(message.chat.id, None)
+    try:
+        with patch.object(route, "get_type_weather", return_value="outdoor"), \
+                patch.object(route, "generate_route", side_effect=routes), \
+                patch.object(route, "route_sort", return_value=list(range(route_count))):
+            route.send_route(bot, message)
+
+        callback = bot.register_next_step_handler.call_args.args[1]
+        callback(SimpleNamespace(chat=message.chat, text="не знаю"))
+        assert "выбери маршрут" in bot.send_message.call_args.args[1]
+        assert message.chat.id not in route.user_history
+        # Re-prompt must leave the same handler available for a valid choice.
+        callback = bot.register_next_step_handler.call_args.args[1]
+        callback(SimpleNamespace(chat=message.chat, text="1️⃣"))
+        assert len(route.user_history[message.chat.id]) == 1
+        assert "прекрасный выбор" in bot.send_message.call_args.args[1]
+    finally:
+        route.user_data.pop(message.chat.id, None)
+        route.user_history.pop(message.chat.id, None)
+
