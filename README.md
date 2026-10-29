@@ -6,6 +6,13 @@ WalkProject is a Russian-language Telegram bot that suggests walking itineraries
 
 > **Project status:** coursework / prototype. This repository preserves the original team's routing design and makes the code safer and easier to explore. It is not a continuously hosted service, and its place database and opening hours may be outdated.
 
+## Telegram bot preview
+
+![WalkProject Telegram bot: welcome and budget input](screenshots/01-welcome-and-budget.webp)
+
+*Original Russian-language interface: onboarding and budget selection. The screenshots show the historical student prototype; the repository's current routing design uses a fixed central-Moscow reference matrix.*
+
+
 ## Features
 
 - Conversational Telegram flow: budget, duration, interest tags and location.
